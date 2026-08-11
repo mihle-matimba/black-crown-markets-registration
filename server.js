@@ -65,7 +65,7 @@ const server = http.createServer(async (req, res) => {
 
   // Pages
   if (req.method === 'GET') {
-    if (req.url === '/' || req.url === '/login') { serveFile(res, 'bcm-login.html'); return; }
+    if (req.url === '/' || req.url === '/login') { serveFile(res, 'index.html'); return; }
     if (req.url === '/register') { serveFile(res, 'bcm-register.html'); return; }
     if (req.url === '/register-demo') { serveFile(res, 'bcm-register-demo.html'); return; }
   }
