@@ -26,9 +26,9 @@ module.exports = async (req, res) => {
       howlong: body.howlong,
       occupation: body.occupation,
       ibid: body.ibid,
-      terms: body.terms ? '1' : '0',
-      privacy: body.privacy ? '1' : '0',
-      clientagreement: body.clientagreement ? '1' : '0',
+      terms: !!body.terms,
+      privacy: !!body.privacy,
+      clientagreement: !!body.clientagreement,
     });
     sendJson(res, 200, result);
   } catch (err) {
