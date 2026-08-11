@@ -10,7 +10,6 @@ module.exports = async (req, res) => {
       access_token: token,
       request: 'Login',
       email,
-      account_number: email,
       password
     });
 
