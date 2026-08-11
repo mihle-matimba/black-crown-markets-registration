@@ -315,6 +315,30 @@
         padding: 40px 28px;
       }
     }
+
+    .pw-wrap { position: relative; }
+    .pw-wrap input { padding-right: 44px; }
+    .pw-toggle {
+      position: absolute;
+      top: 50%;
+      right: 4px;
+      transform: translateY(-50%);
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #9ca3af;
+      padding: 0;
+    }
+    .pw-toggle:hover { color: #7B2FBE; }
+    .pw-toggle svg { width: 18px; height: 18px; }
+    .pw-toggle .eye-off { display: none; }
+    .pw-toggle.showing .eye { display: none; }
+    .pw-toggle.showing .eye-off { display: block; }
   </style>
 </head>
 
@@ -332,7 +356,17 @@
         </div>
         <div class="field">
           <label>Password</label>
-          <input type="password" id="login-password" placeholder="••••••••" />
+          <div class="pw-wrap">
+            <input type="password" id="login-password" placeholder="••••••••" />
+            <button type="button" class="pw-toggle" aria-label="Show password" onclick="togglePasswordVisibility('login-password', this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path class="eye" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"></path>
+                <circle class="eye" cx="12" cy="12" r="3"></circle>
+                <path class="eye-off" d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.86 21.86 0 0 1 5.06-6.06M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.77 21.77 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                <line class="eye-off" x1="1" y1="1" x2="23" y2="23"></line>
+              </svg>
+            </button>
+          </div>
         </div>
         <button class="btn" id="loginBtn" onclick="login()">Login</button>
         <button class="btn-link" onclick="showScreen('screen-forgot')">Forgot your password?</button>
@@ -368,11 +402,31 @@
         </div>
         <div class="field">
           <label>New Password</label>
-          <input type="password" id="reset-new-password" placeholder="••••••••" />
+          <div class="pw-wrap">
+            <input type="password" id="reset-new-password" placeholder="••••••••" />
+            <button type="button" class="pw-toggle" aria-label="Show password" onclick="togglePasswordVisibility('reset-new-password', this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path class="eye" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"></path>
+                <circle class="eye" cx="12" cy="12" r="3"></circle>
+                <path class="eye-off" d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.86 21.86 0 0 1 5.06-6.06M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.77 21.77 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                <line class="eye-off" x1="1" y1="1" x2="23" y2="23"></line>
+              </svg>
+            </button>
+          </div>
         </div>
         <div class="field">
           <label>Confirm Password</label>
-          <input type="password" id="reset-confirm-password" placeholder="••••••••" />
+          <div class="pw-wrap">
+            <input type="password" id="reset-confirm-password" placeholder="••••••••" />
+            <button type="button" class="pw-toggle" aria-label="Show password" onclick="togglePasswordVisibility('reset-confirm-password', this)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path class="eye" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"></path>
+                <circle class="eye" cx="12" cy="12" r="3"></circle>
+                <path class="eye-off" d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.86 21.86 0 0 1 5.06-6.06M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.77 21.77 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                <line class="eye-off" x1="1" y1="1" x2="23" y2="23"></line>
+              </svg>
+            </button>
+          </div>
         </div>
         <button class="btn" id="resetBtn" onclick="resetPassword()">Reset Password</button>
         <div class="status" id="reset-status"></div>
@@ -404,6 +458,14 @@
       real.href = real.href + (real.href.includes('?') ? '&' : '?') + 'ibid=' + encodeURIComponent(ibid);
       demo.href = demo.href + (demo.href.includes('?') ? '&' : '?') + 'ibid=' + encodeURIComponent(ibid);
     })();
+
+    function togglePasswordVisibility(id, btn) {
+      const input = document.getElementById(id);
+      const show = input.type === 'password';
+      input.type = show ? 'text' : 'password';
+      btn.classList.toggle('showing', show);
+      btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+    }
 
     function showScreen(id) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));

@@ -264,6 +264,30 @@
     @media (max-width: 480px) {
       .steps { display: none; }
     }
+
+    .pw-wrap { position: relative; }
+    .pw-wrap input { padding-right: 44px; }
+    .pw-toggle {
+      position: absolute;
+      top: 50%;
+      right: 4px;
+      transform: translateY(-50%);
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #9ca3af;
+      padding: 0;
+    }
+    .pw-toggle:hover { color: #7B2FBE; }
+    .pw-toggle svg { width: 18px; height: 18px; }
+    .pw-toggle .eye-off { display: none; }
+    .pw-toggle.showing .eye { display: none; }
+    .pw-toggle.showing .eye-off { display: block; }
   </style>
 </head>
 <body>
@@ -291,7 +315,17 @@
     <div class="field"><label>Confirm Email</label><input type="email" id="confirm_email" placeholder="your@email.com" /></div>
     <div class="field">
       <label>Password</label>
-      <input type="password" id="password" placeholder="Min 8 chars, upper, lower & number" oninput="updatePasswordHint(this.value)" />
+      <div class="pw-wrap">
+        <input type="password" id="password" placeholder="Min 8 chars, upper, lower & number" oninput="updatePasswordHint(this.value)" />
+        <button type="button" class="pw-toggle" aria-label="Show password" onclick="togglePasswordVisibility('password', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path class="eye" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"></path>
+            <circle class="eye" cx="12" cy="12" r="3"></circle>
+            <path class="eye-off" d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.86 21.86 0 0 1 5.06-6.06M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.77 21.77 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+            <line class="eye-off" x1="1" y1="1" x2="23" y2="23"></line>
+          </svg>
+        </button>
+      </div>
       <div class="pw-rules">
         <span class="pw-rule" id="rule-lower"><span class="dot"></span>Lowercase</span>
         <span class="pw-rule" id="rule-upper"><span class="dot"></span>Uppercase</span>
@@ -299,7 +333,20 @@
       </div>
       <p class="pw-hint-note">Include at least 2 of the 3, and 8+ characters</p>
     </div>
-    <div class="field"><label>Confirm Password</label><input type="password" id="confirm_password" placeholder="Repeat your password" /></div>
+    <div class="field">
+      <label>Confirm Password</label>
+      <div class="pw-wrap">
+        <input type="password" id="confirm_password" placeholder="Repeat your password" />
+        <button type="button" class="pw-toggle" aria-label="Show password" onclick="togglePasswordVisibility('confirm_password', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path class="eye" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"></path>
+            <circle class="eye" cx="12" cy="12" r="3"></circle>
+            <path class="eye-off" d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a21.86 21.86 0 0 1 5.06-6.06M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a21.77 21.77 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+            <line class="eye-off" x1="1" y1="1" x2="23" y2="23"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
     <button class="btn" onclick="goStep(1, 2)">Continue →</button>
     <a href="/login" class="btn-ghost">Already have an account? Sign in</a>
     <div class="status" id="status-1"></div>
@@ -666,6 +713,14 @@
     document.getElementById('rule-lower').classList.toggle('met', hasLower);
     document.getElementById('rule-upper').classList.toggle('met', hasUpper);
     document.getElementById('rule-digit').classList.toggle('met', hasDigit);
+  }
+
+  function togglePasswordVisibility(id, btn) {
+    const input = document.getElementById(id);
+    const show = input.type === 'password';
+    input.type = show ? 'text' : 'password';
+    btn.classList.toggle('showing', show);
+    btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
   }
 
   function setStatus(id, type, msg) {
