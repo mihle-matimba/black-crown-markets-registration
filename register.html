@@ -157,17 +157,6 @@
     .screen { display: none; }
     .screen.active { display: block; }
 
-    /* Steps */
-    .steps { display: flex; align-items: center; margin-bottom: 28px; gap: 6px; }
-    .step { display: flex; align-items: center; gap: 6px; }
-    .step-num { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; }
-    .step-num.active { background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); color: #fff; }
-    .step-num.done { background: #e9f8ee; color: #1c7a3e; }
-    .step-num.inactive { background: #f2f2f4; color: #b3b3b3; }
-    .step-label { font-size: 10px; color: #b3b3b3; white-space: nowrap; }
-    .step-label.active { color: #7B2FBE; }
-    .step-line { flex: 1; height: 1px; background: #e5e5e7; min-width: 8px; }
-
     /* Checkbox */
     .check-field { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px; }
     .check-field input[type="checkbox"] { width: 18px; height: 18px; min-width: 18px; margin-top: 2px; accent-color: #7B2FBE; cursor: pointer; border-radius: 4px; }
@@ -261,10 +250,6 @@
       .panel-left { padding: 36px 24px; max-height: 92vh; }
     }
 
-    @media (max-width: 480px) {
-      .steps { display: none; }
-    }
-
     .pw-wrap { position: relative; }
     .pw-wrap input { padding-right: 44px; }
     .pw-toggle {
@@ -296,15 +281,6 @@
   <!-- STEP 1: Personal Info -->
   <div class="screen active" id="screen-step1">
     <div class="badge">LIVE ACCOUNT</div>
-    <div class="steps">
-      <div class="step"><div class="step-num active">1</div><div class="step-label active">Personal</div></div>
-      <div class="step-line"></div>
-      <div class="step"><div class="step-num inactive">2</div><div class="step-label">Contact</div></div>
-      <div class="step-line"></div>
-      <div class="step"><div class="step-num inactive">3</div><div class="step-label">Account</div></div>
-      <div class="step-line"></div>
-      <div class="step"><div class="step-num inactive">4</div><div class="step-label">Done</div></div>
-    </div>
     <h1>Personal Details</h1>
     <p class="subtitle">Tell us a bit about yourself</p>
     <div class="row">
@@ -355,15 +331,6 @@
   <!-- STEP 2: Contact Info -->
   <div class="screen" id="screen-step2">
     <div class="badge">LIVE ACCOUNT</div>
-    <div class="steps">
-      <div class="step"><div class="step-num done">✓</div><div class="step-label">Personal</div></div>
-      <div class="step-line"></div>
-      <div class="step"><div class="step-num active">2</div><div class="step-label active">Contact</div></div>
-      <div class="step-line"></div>
-      <div class="step"><div class="step-num inactive">3</div><div class="step-label">Account</div></div>
-      <div class="step-line"></div>
-      <div class="step"><div class="step-num inactive">4</div><div class="step-label">Done</div></div>
-    </div>
     <button class="btn-back" onclick="goScreen('screen-step1')">← Back</button>
     <h1>Contact Information</h1>
     <p class="subtitle">How can we reach you?</p>
@@ -436,15 +403,6 @@
   <!-- STEP 4: Account Setup -->
   <div class="screen" id="screen-step4">
     <div class="badge">LIVE ACCOUNT</div>
-    <div class="steps">
-      <div class="step"><div class="step-num done">✓</div><div class="step-label">Personal</div></div>
-      <div class="step-line"></div>
-      <div class="step"><div class="step-num done">✓</div><div class="step-label">Contact</div></div>
-      <div class="step-line"></div>
-      <div class="step"><div class="step-num active">3</div><div class="step-label active">Account</div></div>
-      <div class="step-line"></div>
-      <div class="step"><div class="step-num inactive">4</div><div class="step-label">Done</div></div>
-    </div>
     <button class="btn-back" onclick="goScreen('screen-step2')">← Back</button>
     <h1>Account Setup</h1>
     <p class="subtitle">Choose your currency and account type</p>
