@@ -353,7 +353,7 @@
     </div>
 
     <button class="btn" id="registerBtn" onclick="register()">Create Demo Account</button>
-    <a href="http://localhost:3000" class="btn-outline">Already have an account? Sign in</a>
+    <a href="/login" class="btn-outline">Already have an account? Sign in</a>
     <p class="risk-warning">Demo accounts use virtual funds only</p>
     <div class="status" id="status"></div>
   </div>
@@ -371,7 +371,7 @@
 
 <script>
   const PORTAL = 'https://trade.blackcrownmarkets.com';
-  const PROXY = 'http://localhost:3000';
+  const PROXY = '/api';
   const affiliateId = new URLSearchParams(window.location.search).get('ib') || '';
 
   function setStatus(type, msg) {
@@ -441,7 +441,7 @@
       if (data._token) {
         setTimeout(() => { window.location.href = `${PORTAL}/silent-login?_token=${data._token}`; }, 1000);
       } else {
-        setTimeout(() => { window.location.href = 'http://localhost:3000'; }, 2000);
+        setTimeout(() => { window.location.href = '/login'; }, 2000);
       }
 
     } catch (err) {

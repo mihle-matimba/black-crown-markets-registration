@@ -1,0 +1,13 @@
+{
+  "name": "black-crown-markets-registration",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Black Crown Markets registration, login, and password reset front end with a Skale API proxy.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
