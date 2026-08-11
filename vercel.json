@@ -1,8 +1,12 @@
 {
   "rewrites": [
     { "source": "/login", "destination": "/index.html" },
+    { "source": "/login.html", "destination": "/index.html" },
     { "source": "/register", "destination": "/bcm-register.html" },
+    { "source": "/register.html", "destination": "/bcm-register.html" },
     { "source": "/register-demo", "destination": "/bcm-register-demo.html" },
-    { "source": "/new-password", "destination": "/bcm-new-password.html" }
+    { "source": "/register-demo.html", "destination": "/bcm-register-demo.html" },
+    { "source": "/new-password", "destination": "/bcm-new-password.html" },
+    { "source": "/new-password.html", "destination": "/bcm-new-password.html" }
   ]
 }
