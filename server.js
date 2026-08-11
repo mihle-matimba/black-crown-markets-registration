@@ -20,10 +20,10 @@ const server = http.createServer(async (req, res) => {
   const url = req.url.split('?')[0];
 
   if (req.method === 'GET') {
-    if (url === '/' || url === '/login') { serveFile(res, 'index.html'); return; }
-    if (url === '/register') { serveFile(res, 'bcm-register.html'); return; }
-    if (url === '/register-demo') { serveFile(res, 'bcm-register-demo.html'); return; }
-    if (url === '/new-password') { serveFile(res, 'bcm-new-password.html'); return; }
+    if (url === '/' || url === '/login' || url === '/login.html') { serveFile(res, 'login.html'); return; }
+    if (url === '/register' || url === '/register.html') { serveFile(res, 'register.html'); return; }
+    if (url === '/register-demo' || url === '/register-demo.html') { serveFile(res, 'register-demo.html'); return; }
+    if (url === '/new-password' || url === '/new-password.html' || url.startsWith('/new-password/')) { serveFile(res, 'new-password.html'); return; }
   }
 
   if (url === '/api/login') { await loginHandler(req, res); return; }

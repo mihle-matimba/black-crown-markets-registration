@@ -397,12 +397,12 @@
 
     // Carry the affiliate/IB code through to registration if present
     (function propagateAffiliate() {
-      const ib = new URLSearchParams(window.location.search).get('ib');
-      if (!ib) return;
+      const ibid = (new URLSearchParams(window.location.search).get('ibid') || '').replace(/\D/g, '');
+      if (!ibid) return;
       const real = document.getElementById('realAccountLink');
       const demo = document.getElementById('demoAccountLink');
-      real.href = real.href + (real.href.includes('?') ? '&' : '?') + 'ib=' + encodeURIComponent(ib);
-      demo.href = demo.href + (demo.href.includes('?') ? '&' : '?') + 'ib=' + encodeURIComponent(ib);
+      real.href = real.href + (real.href.includes('?') ? '&' : '?') + 'ibid=' + encodeURIComponent(ibid);
+      demo.href = demo.href + (demo.href.includes('?') ? '&' : '?') + 'ibid=' + encodeURIComponent(ibid);
     })();
 
     function showScreen(id) {

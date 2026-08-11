@@ -1,15 +1,7 @@
-const { skalePost, getToken, readBody, setCors, sendJson } = require('../lib/skale');
-
-function clientIp(req) {
-  const forwarded = req.headers['x-forwarded-for'];
-  if (forwarded) return forwarded.split(',')[0].trim();
-  return req.socket ? req.socket.remoteAddress : '';
-}
+const { skalePost, getToken, readBody, clientIp, requirePost, sendJson, DEFAULT_PLATFORM } = require('./_skale');
 
 module.exports = async (req, res) => {
-  setCors(res);
-  if (req.method === 'OPTIONS') { res.statusCode = 204; res.end(); return; }
-  if (req.method !== 'POST') { sendJson(res, 405, { error: 'Method not allowed' }); return; }
+  if (requirePost(req, res)) return;
 
   try {
     const body = await readBody(req);
@@ -24,11 +16,16 @@ module.exports = async (req, res) => {
       country: body.country,
       password: body.password,
       currency: body.currency || 'USD',
-      platform_name: 'MT5',
+      platform_name: DEFAULT_PLATFORM,
       ip: clientIp(req),
       account_type_requested: body.account_type,
       requested_leverage: body.leverage,
       identification_number: body.identification_number,
+      professional_status: body.professional_status,
+      workatfinancial: !!body.workatfinancial,
+      howlong: body.howlong,
+      occupation: body.occupation,
+      ibid: body.ibid,
       terms: body.terms ? '1' : '0',
       privacy: body.privacy ? '1' : '0',
       clientagreement: body.clientagreement ? '1' : '0',

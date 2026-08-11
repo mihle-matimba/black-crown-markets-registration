@@ -2,6 +2,7 @@ const https = require('https');
 
 const CLIENT_ID = process.env.SKALE_CLIENT_ID || 'bcm-dev_black_crown';
 const CLIENT_SECRET = process.env.SKALE_CLIENT_SECRET;
+const DEFAULT_PLATFORM = process.env.SKALE_DEFAULT_PLATFORM || 'MT5';
 
 function skalePost(urlPath, data) {
   return new Promise((resolve, reject) => {
@@ -55,6 +56,12 @@ function readBody(req) {
   });
 }
 
+function clientIp(req) {
+  const forwarded = req.headers['x-forwarded-for'];
+  if (forwarded) return forwarded.split(',')[0].trim();
+  return req.socket ? req.socket.remoteAddress : '';
+}
+
 function setCors(res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -67,4 +74,12 @@ function sendJson(res, statusCode, payload) {
   res.end(JSON.stringify(payload));
 }
 
-module.exports = { skalePost, getToken, readBody, setCors, sendJson };
+// Returns true if the request was already handled (preflight or wrong method).
+function requirePost(req, res) {
+  setCors(res);
+  if (req.method === 'OPTIONS') { res.statusCode = 204; res.end(); return true; }
+  if (req.method !== 'POST') { sendJson(res, 405, { error: 'Method not allowed' }); return true; }
+  return false;
+}
+
+module.exports = { skalePost, getToken, readBody, clientIp, setCors, sendJson, requirePost, DEFAULT_PLATFORM };

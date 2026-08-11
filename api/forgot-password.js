@@ -1,9 +1,7 @@
-const { skalePost, getToken, readBody, setCors, sendJson } = require('../lib/skale');
+const { skalePost, getToken, readBody, requirePost, sendJson } = require('./_skale');
 
 module.exports = async (req, res) => {
-  setCors(res);
-  if (req.method === 'OPTIONS') { res.statusCode = 204; res.end(); return; }
-  if (req.method !== 'POST') { sendJson(res, 405, { error: 'Method not allowed' }); return; }
+  if (requirePost(req, res)) return;
 
   try {
     const { email } = await readBody(req);

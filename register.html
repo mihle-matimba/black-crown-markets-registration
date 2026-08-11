@@ -340,12 +340,10 @@
     <h2>Compliance</h2>
     <div class="field">
       <label>Employment Status</label>
-      <select id="employment_status" onchange="toggleOccupation(this.value)">
-        <option value="Employed" selected>Employed</option>
-        <option value="Self-Employed">Self-Employed</option>
+      <select id="professional_status" onchange="toggleOccupation(this.value)">
+        <option value="Employee" selected>Employee</option>
+        <option value="Entrepreneur">Entrepreneur</option>
         <option value="Unemployed">Unemployed</option>
-        <option value="Retired">Retired</option>
-        <option value="Student">Student</option>
       </select>
     </div>
     <div class="field" id="occupation-field">
@@ -361,7 +359,7 @@
     </div>
     <div class="field" id="financial-duration-field" style="display:none;">
       <label>If Yes - For How Long?</label>
-      <input type="text" id="worked_financial_institution_duration" placeholder="e.g. 2 years" />
+      <input type="text" id="howlong" placeholder="e.g. 2 years" />
     </div>
 
     <h2>Legal Information</h2>
@@ -476,7 +474,7 @@
 <script>
   const PORTAL = 'https://trade.blackcrownmarkets.com';
   const PROXY = '/api';
-  const affiliateId = new URLSearchParams(window.location.search).get('ib') || '';
+  const affiliateId = (new URLSearchParams(window.location.search).get('ibid') || '').replace(/\D/g, '');
 
   const ACCOUNT_TYPES = {
     USD: [
@@ -700,13 +698,13 @@
       const terms = document.getElementById('terms').checked;
       const client_agreement = document.getElementById('client_agreement').checked;
       const privacy = document.getElementById('privacy').checked;
-      const employmentStatus = document.getElementById('employment_status').value;
+      const professionalStatus = document.getElementById('professional_status').value;
       const occupation = document.getElementById('occupation').value.trim();
       const workedFinancial = document.getElementById('worked_financial_institution').value;
-      const workedFinancialDuration = document.getElementById('worked_financial_institution_duration').value.trim();
+      const howlong = document.getElementById('howlong').value.trim();
       if (!phone) { setStatus(2, 'error', 'Please enter your phone number.'); return; }
-      if ((employmentStatus === 'Employed' || employmentStatus === 'Self-Employed') && !occupation) { setStatus(2, 'error', 'Please enter your occupation.'); return; }
-      if (workedFinancial === 'Yes' && !workedFinancialDuration) { setStatus(2, 'error', 'Please tell us how long you worked in a financial institution.'); return; }
+      if ((professionalStatus === 'Employee' || professionalStatus === 'Entrepreneur') && !occupation) { setStatus(2, 'error', 'Please enter your occupation.'); return; }
+      if (workedFinancial === 'Yes' && !howlong) { setStatus(2, 'error', 'Please tell us how long you worked in a financial institution.'); return; }
       if (!terms || !client_agreement || !privacy) { setStatus(2, 'error', 'Please agree to all legal documents.'); return; }
     }
 
@@ -715,8 +713,8 @@
 
   function toggleOccupation(value) {
     const field = document.getElementById('occupation-field');
-    field.style.display = (value === 'Employed' || value === 'Self-Employed') ? 'block' : 'none';
-    if (value !== 'Employed' && value !== 'Self-Employed') {
+    field.style.display = (value === 'Employee' || value === 'Entrepreneur') ? 'block' : 'none';
+    if (value !== 'Employee' && value !== 'Entrepreneur') {
       document.getElementById('occupation').value = '';
     }
   }
@@ -725,7 +723,7 @@
     const field = document.getElementById('financial-duration-field');
     field.style.display = value === 'Yes' ? 'block' : 'none';
     if (value !== 'Yes') {
-      document.getElementById('worked_financial_institution_duration').value = '';
+      document.getElementById('howlong').value = '';
     }
   }
 
@@ -751,11 +749,11 @@
       terms: document.getElementById('terms').checked,
       privacy: document.getElementById('privacy').checked,
       clientagreement: document.getElementById('client_agreement').checked,
-      worked_financial_institution: document.getElementById('worked_financial_institution').value,
-      worked_financial_institution_duration: document.getElementById('worked_financial_institution_duration').value.trim(),
-      employment_status: document.getElementById('employment_status').value,
+      workatfinancial: document.getElementById('worked_financial_institution').value === 'Yes',
+      howlong: document.getElementById('howlong').value.trim(),
+      professional_status: document.getElementById('professional_status').value,
       occupation: document.getElementById('occupation').value.trim(),
-      affiliate_id: affiliateId,
+      ibid: affiliateId,
     };
 
     try {
