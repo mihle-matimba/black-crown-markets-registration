@@ -266,8 +266,8 @@
     }
 
     async function confirmEmailAddress() {
-      if (!confirmationToken || !confirmationEmail) {
-        setStatus('error', 'This link is missing information. Please use the link from your confirmation email.');
+      if (!confirmationToken) {
+        setStatus('error', 'This link is missing its token. Please use the link from your confirmation email.');
         return;
       }
 
