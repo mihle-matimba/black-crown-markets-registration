@@ -257,6 +257,7 @@
     const confirmationPathParts = window.location.pathname.split('/').filter(Boolean);
     const confirmationToken = new URLSearchParams(window.location.search).get('token')
       || (confirmationPathParts.length > 1 ? confirmationPathParts.pop() : '');
+    const confirmationEmail = new URLSearchParams(window.location.search).get('email') || '';
 
     function setStatus(type, msg) {
       const el = document.getElementById('status');
@@ -265,8 +266,8 @@
     }
 
     async function confirmEmailAddress() {
-      if (!confirmationToken) {
-        setStatus('error', 'This link is missing its token. Please use the link from your confirmation email.');
+      if (!confirmationToken || !confirmationEmail) {
+        setStatus('error', 'This link is missing information. Please use the link from your confirmation email.');
         return;
       }
 
@@ -276,7 +277,7 @@
         const res = await fetch(`${PROXY}/email-confirmation`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ token: confirmationToken })
+          body: JSON.stringify({ token: confirmationToken, email: confirmationEmail })
         });
         const data = await res.json();
         if (data.status !== 'Success') throw new Error(data.message || 'Confirmation failed. This link may have expired.');
