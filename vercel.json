@@ -2,7 +2,7 @@
   "cleanUrls": true,
   "rewrites": [
     { "source": "/", "destination": "/login" },
-    { "source": "/new-password/:token", "destination": "/new-password.html" },
-    { "source": "/email-confirmation/:token", "destination": "/email-confirmation.html" }
+    { "source": "/new-password/(.*)", "destination": "/new-password.html" },
+    { "source": "/email-confirmation/(.*)", "destination": "/email-confirmation.html" }
   ]
 }
