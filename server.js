@@ -9,6 +9,8 @@ const forgotPasswordHandler = require('./api/forgot-password');
 const resetPasswordHandler = require('./api/reset-password');
 const registerHandler = require('./api/register');
 const registerDemoHandler = require('./api/register-demo');
+const confirmEmailHandler = require('./api/confirm-email');
+const resendEmailConfirmationHandler = require('./api/resend-email-confirmation');
 
 function serveFile(res, filename) {
   const html = fs.readFileSync(path.join(__dirname, filename), 'utf8');
@@ -24,6 +26,7 @@ const server = http.createServer(async (req, res) => {
     if (url === '/register' || url === '/register.html') { serveFile(res, 'register.html'); return; }
     if (url === '/register-demo' || url === '/register-demo.html') { serveFile(res, 'register-demo.html'); return; }
     if (url === '/new-password' || url === '/new-password.html' || url.startsWith('/new-password/')) { serveFile(res, 'new-password.html'); return; }
+    if (url === '/confirm-email' || url === '/confirm-email.html') { serveFile(res, 'confirm-email.html'); return; }
   }
 
   if (url === '/api/login') { await loginHandler(req, res); return; }
@@ -31,6 +34,8 @@ const server = http.createServer(async (req, res) => {
   if (url === '/api/reset-password') { await resetPasswordHandler(req, res); return; }
   if (url === '/api/register') { await registerHandler(req, res); return; }
   if (url === '/api/register-demo') { await registerDemoHandler(req, res); return; }
+  if (url === '/api/confirm-email') { await confirmEmailHandler(req, res); return; }
+  if (url === '/api/resend-email-confirmation') { await resendEmailConfirmationHandler(req, res); return; }
 
   res.writeHead(404);
   res.end('Not found');
