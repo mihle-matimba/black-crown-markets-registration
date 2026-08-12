@@ -280,7 +280,7 @@
           body: JSON.stringify({ token: confirmationToken, email: confirmationEmail })
         });
         const data = await res.json();
-        if (data.status !== 'Success') throw new Error(data.message || 'Confirmation failed. This link may have expired.');
+        if (data.status !== 'Success') throw new Error(data.message || data.error || 'Confirmation failed. This link may have expired.');
         setStatus('success', '&#10003; ' + (data.message || 'Email confirmed! Try to login.'));
         document.getElementById('loginLink').style.display = 'block';
       } catch (err) {
