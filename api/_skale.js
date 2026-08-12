@@ -6,7 +6,11 @@ const DEFAULT_PLATFORM = process.env.SKALE_DEFAULT_PLATFORM || 'MT5';
 
 function skalePost(urlPath, data) {
   return new Promise((resolve, reject) => {
-    const body = new URLSearchParams(data).toString();
+    const cleaned = {};
+    for (const key in data) {
+      if (data[key] !== undefined && data[key] !== null) cleaned[key] = data[key];
+    }
+    const body = new URLSearchParams(cleaned).toString();
     const options = {
       hostname: 'client.api.skaleapps.io',
       path: urlPath,
