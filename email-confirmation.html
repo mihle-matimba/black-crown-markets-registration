@@ -252,9 +252,11 @@
   <script>
     const PROXY = '/api';
 
-    // Token is the last path segment: /email-confirmation/{token}
+    // Token comes from a query param (?token=...), or falls back to the last
+    // path segment (/email-confirmation/{token}) if no query param is present.
     const confirmationPathParts = window.location.pathname.split('/').filter(Boolean);
-    const confirmationToken = confirmationPathParts.length > 1 ? confirmationPathParts.pop() : '';
+    const confirmationToken = new URLSearchParams(window.location.search).get('token')
+      || (confirmationPathParts.length > 1 ? confirmationPathParts.pop() : '');
 
     function setStatus(type, msg) {
       const el = document.getElementById('status');
