@@ -361,7 +361,7 @@
     <div class="field">
       <label>Password</label>
       <div class="pw-wrap">
-        <input type="password" id="password" placeholder="Min 8 chars, upper, lower & number" oninput="updatePasswordHint(this.value)" />
+        <input type="password" id="password" placeholder="Min 8 chars, upper, lower, number & symbol" oninput="updatePasswordHint(this.value)" />
         <button type="button" class="pw-toggle" aria-label="Show password" onclick="togglePasswordVisibility('password', this)">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path class="eye" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"></path>
@@ -375,8 +375,9 @@
         <span class="pw-rule" id="rule-lower"><span class="dot"></span>Lowercase</span>
         <span class="pw-rule" id="rule-upper"><span class="dot"></span>Uppercase</span>
         <span class="pw-rule" id="rule-digit"><span class="dot"></span>Number</span>
+        <span class="pw-rule" id="rule-symbol"><span class="dot"></span>Symbol</span>
       </div>
-      <p class="pw-hint-note">Include at least 2 of the 3, and 8+ characters</p>
+      <p class="pw-hint-note">Include all 4 above, and 8+ characters</p>
     </div>
 
     <button class="btn" id="registerBtn" onclick="register()">Create Demo Account</button>
@@ -419,15 +420,17 @@
     const hasLower = /[a-z]/.test(pw);
     const hasUpper = /[A-Z]/.test(pw);
     const hasDigit = /[0-9]/.test(pw);
-    const met = [hasLower, hasUpper, hasDigit].filter(Boolean).length;
-    return { hasLower, hasUpper, hasDigit, met, valid: met >= 2 && pw.length >= 8 };
+    const hasSymbol = /[^A-Za-z0-9]/.test(pw);
+    const met = [hasLower, hasUpper, hasDigit, hasSymbol].filter(Boolean).length;
+    return { hasLower, hasUpper, hasDigit, hasSymbol, met, valid: met === 4 && pw.length >= 8 };
   }
 
   function updatePasswordHint(pw) {
-    const { hasLower, hasUpper, hasDigit } = checkPasswordStrength(pw);
+    const { hasLower, hasUpper, hasDigit, hasSymbol } = checkPasswordStrength(pw);
     document.getElementById('rule-lower').classList.toggle('met', hasLower);
     document.getElementById('rule-upper').classList.toggle('met', hasUpper);
     document.getElementById('rule-digit').classList.toggle('met', hasDigit);
+    document.getElementById('rule-symbol').classList.toggle('met', hasSymbol);
   }
 
   async function register() {
@@ -451,8 +454,8 @@
       setStatus('error', 'Password must be at least 8 characters.'); return;
     }
 
-    if (checkPasswordStrength(body.password).met < 2) {
-      setStatus('error', 'Password must include at least two of the following three: lower cased letter, upper cased letter, a digit!');
+    if (!checkPasswordStrength(body.password).valid) {
+      setStatus('error', 'Password must include at least one uppercase letter, one lowercase letter, one number, and one symbol.');
       return;
     }
 
