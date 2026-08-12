@@ -232,7 +232,7 @@
   <div class="card">
     <div class="panel-left">
       <h1><strong>Confirm</strong> Email</h1>
-      <p class="subtitle" id="lead-text">Verifying your email address&hellip;</p>
+      <p class="subtitle" id="lead-text">Access your Black Crown Markets account to manage your trading with ease.</p>
 
       <div class="status" id="status"></div>
 
@@ -264,7 +264,6 @@
 
     async function confirmEmailAddress() {
       if (!confirmationToken) {
-        document.getElementById('lead-text').textContent = 'This confirmation link is invalid.';
         setStatus('error', 'This link is missing its token. Please use the link from your confirmation email.');
         return;
       }
@@ -279,11 +278,9 @@
         });
         const data = await res.json();
         if (data.status !== 'Success') throw new Error(data.message || 'Confirmation failed. This link may have expired.');
-        document.getElementById('lead-text').textContent = 'Your email address has been confirmed.';
-        setStatus('success', '&#10003; Email confirmed! You can now sign in.');
+        setStatus('success', '&#10003; ' + (data.message || 'Email confirmed! Try to login.'));
         document.getElementById('loginLink').style.display = 'block';
       } catch (err) {
-        document.getElementById('lead-text').textContent = 'We couldn\'t confirm your email.';
         setStatus('error', err.message || 'Something went wrong.');
       }
     }
