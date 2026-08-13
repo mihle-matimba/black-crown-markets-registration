@@ -430,25 +430,7 @@
 
     <div class="field" style="margin-top:20px;">
       <label>Leverage</label>
-      <select id="leverage">
-        <option value="500">1:500</option>
-        <option value="400">1:400</option>
-        <option value="300">1:300</option>
-        <option value="200">1:200</option>
-        <option value="175">1:175</option>
-        <option value="100" selected>1:100</option>
-        <option value="75">1:75</option>
-        <option value="66">1:66</option>
-        <option value="50">1:50</option>
-        <option value="33">1:33</option>
-        <option value="25">1:25</option>
-        <option value="20">1:20</option>
-        <option value="15">1:15</option>
-        <option value="10">1:10</option>
-        <option value="5">1:5</option>
-        <option value="3">1:3</option>
-        <option value="1">1:1</option>
-      </select>
+      <select id="leverage"></select>
     </div>
 
     <button class="btn" id="registerBtn" onclick="register()">Create Real Account</button>
@@ -496,10 +478,10 @@
           { label: 'Min. Deposit', value: '$10' },
           { label: 'Spread', value: 'From 1.8 pips' },
           { label: 'Commission', value: 'No commission' },
-          { label: 'Max Leverage', value: 'Up to 1:500' },
+          { label: 'Max Leverage', value: 'Up to 1:2000' },
           { label: 'Contract Size', value: '1 lot = 100,000 units' },
         ],
-        account_type: 'Standard Account ($10 Min. Deposit)', currency: 'USD'
+        account_type: 'Standard Account ($10 Min. Deposit)', currency: 'USD', maxLeverage: 2000
       },
       {
         name: 'Standard Cent', tag: 'For Beginners',
@@ -511,7 +493,7 @@
           { label: 'Max Leverage', value: 'Up to 1:500' },
           { label: 'Contract Size', value: '1 lot = 1,000 units' },
         ],
-        account_type: 'Standard Cent ($10 Min. Deposit)', currency: 'USD'
+        account_type: 'Standard Cent ($10 Min. Deposit)', currency: 'USD', maxLeverage: 500
       },
       {
         name: 'Pro', tag: 'Low Spreads',
@@ -520,10 +502,10 @@
           { label: 'Min. Deposit', value: '$100' },
           { label: 'Spread', value: 'From 0.9 pips' },
           { label: 'Commission', value: 'No commission' },
-          { label: 'Max Leverage', value: 'Up to 1:500' },
+          { label: 'Max Leverage', value: 'Up to 1:2000' },
           { label: 'Contract Size', value: '1 lot = 100,000 units' },
         ],
-        account_type: 'Pro Account ($100 Min. Deposit)', currency: 'USD'
+        account_type: 'Pro Account ($100 Min. Deposit)', currency: 'USD', maxLeverage: 2000
       },
       {
         name: 'Raw ECN', tag: 'Lowest Spreads',
@@ -532,10 +514,10 @@
           { label: 'Min. Deposit', value: '$100' },
           { label: 'Spread', value: 'From 0.0 pips' },
           { label: 'Commission', value: '$3.50–$4.00/lot' },
-          { label: 'Max Leverage', value: 'Up to 1:500' },
+          { label: 'Max Leverage', value: 'Up to 1:2000' },
           { label: 'Contract Size', value: '1 lot = 100,000 units' },
         ],
-        account_type: 'ECN Account ($100. Deposit)', currency: 'USD'
+        account_type: 'ECN Account ($100. Deposit)', currency: 'USD', maxLeverage: 2000
       },
       {
         name: 'Bonus Account', tag: 'Up to 150% Bonus',
@@ -547,7 +529,7 @@
           { label: 'Max Leverage', value: 'Up to 1:500' },
           { label: 'Bonus', value: '150% of deposit' },
         ],
-        account_type: '150% Bonus Account ($10. Min. Deposit)', currency: 'USD'
+        account_type: '150% Bonus Account ($10. Min. Deposit)', currency: 'USD', maxLeverage: 500
       },
     ],
     ZAR: [
@@ -558,10 +540,10 @@
           { label: 'Min. Deposit', value: 'R170' },
           { label: 'Spread', value: 'From 1.8 pips' },
           { label: 'Commission', value: 'No commission' },
-          { label: 'Max Leverage', value: 'Up to 1:500' },
+          { label: 'Max Leverage', value: 'Up to 1:2000' },
           { label: 'Contract Size', value: '1 lot = 100,000 units' },
         ],
-        account_type: 'Standard Account (R170 Min. Deposit)', currency: 'ZAR'
+        account_type: 'Standard Account (R170 Min. Deposit)', currency: 'ZAR', maxLeverage: 2000
       },
       {
         name: 'Standard Cent', tag: 'For Beginners',
@@ -573,7 +555,7 @@
           { label: 'Max Leverage', value: 'Up to 1:500' },
           { label: 'Contract Size', value: '1 lot = 1,000 units' },
         ],
-        account_type: 'Standard Cent (R170 Min. Deposit)', currency: 'ZAR'
+        account_type: 'Standard Cent (R170 Min. Deposit)', currency: 'ZAR', maxLeverage: 500
       },
       {
         name: 'Pro', tag: 'Low Spreads',
@@ -582,10 +564,10 @@
           { label: 'Min. Deposit', value: 'R1,700' },
           { label: 'Spread', value: 'From 0.9 pips' },
           { label: 'Commission', value: 'No commission' },
-          { label: 'Max Leverage', value: 'Up to 1:500' },
+          { label: 'Max Leverage', value: 'Up to 1:2000' },
           { label: 'Contract Size', value: '1 lot = 100,000 units' },
         ],
-        account_type: 'Pro Account (R1,700 Min. Deposit)', currency: 'ZAR'
+        account_type: 'Pro Account (R1,700 Min. Deposit)', currency: 'ZAR', maxLeverage: 2000
       },
       {
         name: 'Raw ECN', tag: 'Lowest Spreads',
@@ -594,10 +576,10 @@
           { label: 'Min. Deposit', value: 'R1,700' },
           { label: 'Spread', value: 'From 0.0 pips' },
           { label: 'Commission', value: 'R60–R70/lot' },
-          { label: 'Max Leverage', value: 'Up to 1:500' },
+          { label: 'Max Leverage', value: 'Up to 1:2000' },
           { label: 'Contract Size', value: '1 lot = 100,000 units' },
         ],
-        account_type: 'ECN Account (R1,700 Min. Deposit)', currency: 'ZAR'
+        account_type: 'ECN Account (R1,700 Min. Deposit)', currency: 'ZAR', maxLeverage: 2000
       },
       {
         name: 'Bonus Account', tag: 'Up to 150% Bonus',
@@ -609,13 +591,22 @@
           { label: 'Max Leverage', value: 'Up to 1:500' },
           { label: 'Bonus', value: '150% of deposit' },
         ],
-        account_type: '150% Bonus Account (R170. Min. Deposit)', currency: 'ZAR'
+        account_type: '150% Bonus Account (R170. Min. Deposit)', currency: 'ZAR', maxLeverage: 500
       },
     ]
   };
 
   let selectedCurrency = 'USD';
   let selectedAccountType = ACCOUNT_TYPES.USD[0];
+
+  const LEVERAGE_LADDER = [2000, 1000, 900, 800, 700, 600, 500, 400, 300, 200, 175, 100, 75, 66, 50, 33, 25, 20, 15, 10, 5, 3, 1];
+
+  function renderLeverageOptions(maxLeverage) {
+    const select = document.getElementById('leverage');
+    const options = LEVERAGE_LADDER.filter(l => l <= maxLeverage);
+    const defaultValue = options.includes(100) ? 100 : options[0];
+    select.innerHTML = options.map(l => `<option value="${l}"${l === defaultValue ? ' selected' : ''}>1:${l}</option>`).join('');
+  }
 
   function renderAccountTypes(currency) {
     const types = ACCOUNT_TYPES[currency];
@@ -638,6 +629,7 @@
       </div>
     `).join('');
     selectedAccountType = types[0];
+    renderLeverageOptions(selectedAccountType.maxLeverage);
   }
 
   function selectCurrency(currency) {
@@ -656,6 +648,7 @@
     const card = document.getElementById('acc-' + index);
     card.classList.add('selected');
     card.querySelector('.account-check').textContent = '✓';
+    renderLeverageOptions(selectedAccountType.maxLeverage);
   }
 
 
