@@ -786,7 +786,7 @@
       const data = await res.json();
 
       if (data.status_code !== '1' && data.status_code !== 1) {
-        throw new Error(data.message || 'Account creation failed.');
+        throw new Error(data.message || data.error || 'Account creation failed.');
       }
 
       document.getElementById('success-email').textContent = body.email;

@@ -7,7 +7,18 @@ const DEFAULT_PLATFORM = process.env.SKALE_DEFAULT_PLATFORM || 'MT5';
 // Upstream calls get a hard timeout so a slow Skale surfaces as a real error
 // instead of hanging until the platform kills the whole invocation (which
 // leaves the browser with a dropped connection and no idea what happened).
-const DEFAULT_TIMEOUT_MS = 8000;
+// The default is deliberately generous: account creation provisions a trading
+// account and legitimately takes far longer than a lookup, so a short ceiling
+// here aborts work that would have succeeded. Endpoints that should give up
+// sooner pass their own timeoutMs.
+const DEFAULT_TIMEOUT_MS = 30000;
+
+// Authorisation runs before the real request, so its ceiling is part of every
+// call's budget -- but Skale's auth endpoint is genuinely slow (seconds, not
+// milliseconds), so this has to be generous enough not to abort a call that
+// would have completed. It is deliberately not retried: a retry here doubles
+// the worst case in front of the request that actually matters.
+const AUTH_TIMEOUT_MS = 20000;
 
 function skalePostOnce(urlPath, data, timeoutMs) {
   return new Promise((resolve, reject) => {
@@ -46,9 +57,10 @@ function skalePostOnce(urlPath, data, timeoutMs) {
   });
 }
 
-// `retries` is opt-in per call: retrying is safe for authorisation, but never
-// for a request that consumes a one-time code — a retry there can spend a
-// second OTP the client never asked to spend.
+// `retries` is opt-in per call and off by default. Nothing on the hot path
+// uses it: a retry in front of a slow call just doubles the wait before the
+// request that matters, and retrying a call that consumes a one-time code can
+// spend a second OTP the client never asked to spend.
 function skalePost(urlPath, data, options = {}) {
   const timeoutMs = options.timeoutMs || DEFAULT_TIMEOUT_MS;
   const retries = options.retries || 0;
@@ -61,8 +73,9 @@ function skalePost(urlPath, data, options = {}) {
 }
 
 // Every request used to pay for a fresh authorisation round trip before it
-// could even start its real call. Caching the token across warm invocations
-// halves the upstream latency that was pushing requests past the timeout.
+// could even start its real call, and that round trip is the slow one. Caching
+// the token across warm invocations takes it off the hot path entirely, which
+// is what keeps the total inside the platform's execution limit.
 let cachedToken = null;
 let cachedTokenExpiry = 0;
 const MAX_TOKEN_TTL_MS = 5 * 60 * 1000;
@@ -74,7 +87,7 @@ async function getToken() {
     grant_type: 'client_credentials',
     client_id: CLIENT_ID,
     client_secret: CLIENT_SECRET
-  }, { retries: 1 });
+  }, { timeoutMs: AUTH_TIMEOUT_MS });
   if (!auth.access_token) throw new Error('Auth failed');
   const expiresInMs = Number(auth.expires_in) > 0 ? Number(auth.expires_in) * 1000 : MAX_TOKEN_TTL_MS;
   cachedToken = auth.access_token;
