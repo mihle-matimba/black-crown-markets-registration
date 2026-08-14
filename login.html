@@ -463,11 +463,17 @@
         // a proxy error, a missing secret, an upstream timeout -- has to show
         // its own cause, or a broken backend is indistinguishable from a typo.
         if (data.error) throw new Error(data.error);
-        if (data.status !== 'Success' || !data.object?._token) {
-          throw new Error(data.message || 'Invalid email or password.');
-        }
+        // Skale is not consistent about which field carries success: the
+        // registration pages read status_code, this one read status, against
+        // the same /api/v-2 endpoint. api/login.js already normalises the
+        // token onto object._token wherever it arrives, and the token is what
+        // actually matters -- if one came back, the credentials were accepted.
+        // Gating on the status field instead meant a shape we did not expect
+        // was reported to the user as a rejected password.
+        const sessionToken = data.object?._token;
+        if (!sessionToken) throw new Error(data.message || 'Invalid email or password.');
         setStatus('login-status', 'success', '&#10003; Redirecting...');
-        setTimeout(() => { window.location.href = `${PORTAL}/silent-login?_token=${data.object._token}`; }, 800);
+        setTimeout(() => { window.location.href = `${PORTAL}/silent-login?_token=${sessionToken}`; }, 800);
       } catch (err) {
         setStatus('login-status', 'error', err.message || 'Something went wrong.');
         btn.disabled = false;
