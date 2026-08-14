@@ -437,6 +437,18 @@
       el.innerHTML = msg;
     }
 
+    // A killed or crashed function returns an HTML error page, not JSON, so
+    // res.json() throws and the caller's catch reports it as a rejected
+    // credential. Surface the transport failure instead.
+    async function readJson(res, label) {
+      const raw = await res.text();
+      try {
+        return JSON.parse(raw);
+      } catch (e) {
+        throw new Error(`${label} failed: server returned ${res.status} ${res.statusText || ''}`.trim() + '. Please try again.');
+      }
+    }
+
     async function login() {
       const email = document.getElementById('login-email').value.trim();
       const password = document.getElementById('login-password').value.trim();
@@ -446,8 +458,14 @@
       setStatus('login-status', 'loading', '<span class="spinner"></span> Signing in...');
       try {
         const res = await fetch(`${PROXY}/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) });
-        const data = await res.json();
-        if (data.status !== 'Success' || !data.object?._token) throw new Error('Invalid email or password.');
+        const data = await readJson(res, 'Sign-in');
+        // Only a real Skale rejection means bad credentials. Anything else --
+        // a proxy error, a missing secret, an upstream timeout -- has to show
+        // its own cause, or a broken backend is indistinguishable from a typo.
+        if (data.error) throw new Error(data.error);
+        if (data.status !== 'Success' || !data.object?._token) {
+          throw new Error(data.message || 'Invalid email or password.');
+        }
         setStatus('login-status', 'success', '&#10003; Redirecting...');
         setTimeout(() => { window.location.href = `${PORTAL}/silent-login?_token=${data.object._token}`; }, 800);
       } catch (err) {
@@ -464,8 +482,9 @@
       setStatus('forgot-status', 'loading', '<span class="spinner"></span> Sending reset token...');
       try {
         const res = await fetch(`${PROXY}/forgot-password`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
-        const data = await res.json();
-        if (data.status !== 'Success') throw new Error('Email not found.');
+        const data = await readJson(res, 'Password reset');
+        if (data.error) throw new Error(data.error);
+        if (data.status !== 'Success') throw new Error(data.message || 'Email not found.');
         setStatus('forgot-status', 'success', '&#10003; Check your email for a link to reset your password.');
         btn.disabled = false;
       } catch (err) {
