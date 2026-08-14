@@ -25,7 +25,11 @@ module.exports = async (req, res) => {
       workatfinancial: !!body.workatfinancial,
       howlong: body.howlong,
       occupation: body.occupation,
-      ibid: body.ibid,
+      // Omit the key entirely when there is no affiliate. An empty string
+      // survives the undefined/null filter in _skale.js and goes upstream as
+      // `ibid=`, which is a value Skale has to interpret rather than an
+      // absent field.
+      ibid: body.ibid || undefined,
       terms: body.terms ? '1' : '0',
       privacy: body.privacy ? '1' : '0',
       clientagreement: body.clientagreement ? '1' : '0',

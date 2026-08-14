@@ -402,6 +402,17 @@
   const PROXY = '/api';
   const affiliateId = (new URLSearchParams(window.location.search).get('ibid') || '').replace(/\D/g, '');
 
+  // Carry the affiliate/IB code onto internal links, mirroring register.html
+  // and login.html, so a detour through sign-in does not drop attribution.
+  function withAffiliate(path) {
+    if (!affiliateId) return path;
+    return path + (path.includes('?') ? '&' : '?') + 'ibid=' + encodeURIComponent(affiliateId);
+  }
+
+  document.querySelectorAll('a[href^="/login"]').forEach((a) => {
+    a.href = withAffiliate(a.getAttribute('href'));
+  });
+
   function togglePasswordVisibility(id, btn) {
     const input = document.getElementById(id);
     const show = input.type === 'password';
@@ -479,7 +490,7 @@
       if (data._token) {
         setTimeout(() => { window.location.href = `${PORTAL}/silent-login?_token=${data._token}`; }, 1000);
       } else {
-        setTimeout(() => { window.location.href = '/login'; }, 2000);
+        setTimeout(() => { window.location.href = withAffiliate('/login'); }, 2000);
       }
 
     } catch (err) {

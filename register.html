@@ -451,7 +451,7 @@
       <p style="font-size: 13px; color: #666; margin-top: 16px;">We've sent an email to</p>
       <div class="success-email" id="success-email"></div>
       <p style="font-size: 13px; color: #666;">Please click the link in that message to activate your account.</p>
-      <button class="btn" onclick="window.location.href='/login'" style="margin-top: 24px;">Go to Login</button>
+      <button class="btn" onclick="window.location.href = withAffiliate('/login')" style="margin-top: 24px;">Go to Login</button>
     </div>
   </div>
 
@@ -472,6 +472,18 @@
   const PORTAL = 'https://trade.blackcrownmarkets.com';
   const PROXY = '/api';
   const affiliateId = (new URLSearchParams(window.location.search).get('ibid') || '').replace(/\D/g, '');
+
+  // Carry the affiliate/IB code onto internal links. login.html already
+  // propagates it in the other direction, so without this a user who steps
+  // over to sign in and comes back loses the attribution.
+  function withAffiliate(path) {
+    if (!affiliateId) return path;
+    return path + (path.includes('?') ? '&' : '?') + 'ibid=' + encodeURIComponent(affiliateId);
+  }
+
+  document.querySelectorAll('a[href^="/login"]').forEach((a) => {
+    a.href = withAffiliate(a.getAttribute('href'));
+  });
 
   const ACCOUNT_TYPES = {
     USD: [

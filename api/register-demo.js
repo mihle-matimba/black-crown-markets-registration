@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
       currency: body.currency || 'USD',
       platform_name: DEFAULT_PLATFORM,
       ip: clientIp(req),
-      ibid: body.ibid,
+      ibid: body.ibid || undefined,
     });
     sendJson(res, 200, result);
   } catch (err) {
