@@ -1,5 +1,8 @@
 {
   "cleanUrls": true,
+  "functions": {
+    "api/*.js": { "maxDuration": 60 }
+  },
   "rewrites": [
     { "source": "/", "destination": "/login" },
     { "source": "/new-password/(.*)", "destination": "/new-password.html" },
