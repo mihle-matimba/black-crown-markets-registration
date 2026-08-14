@@ -384,12 +384,16 @@
 
     <h2>Legal Information</h2>
     <div class="check-field">
-      <input type="checkbox" id="terms" />
-      <label for="terms">I agree to the <a href="https://yscggkgvxfjvfmnulrcy.supabase.co/storage/v1/object/public/Media/Black%20Crown%20Holdings_Terms%20and%20Condittions%20v.1.0.pdf" target="_blank">Terms and Conditions</a> *</label>
+      <input type="checkbox" id="fsp_client_agreement" />
+      <label for="fsp_client_agreement">I agree to the <a href="https://yscggkgvxfjvfmnulrcy.supabase.co/storage/v1/object/public/Media/Black%20Crown%20Holdings_FSP%20Client%20Agreement%20and%20Mandate_V1%20Aug%202026.pdf" target="_blank">FSP Client Agreement</a> *</label>
     </div>
     <div class="check-field">
       <input type="checkbox" id="client_agreement" />
       <label for="client_agreement">I agree to the <a href="https://yscggkgvxfjvfmnulrcy.supabase.co/storage/v1/object/public/Media/ODP-Client-Agreement-March-2026-v2.pdf" target="_blank">ODP Agreement</a> *</label>
+    </div>
+    <div class="check-field">
+      <input type="checkbox" id="terms" />
+      <label for="terms">I agree to the <a href="https://yscggkgvxfjvfmnulrcy.supabase.co/storage/v1/object/public/Media/Black%20Crown%20Holdings_Terms%20and%20Condittions%20v.1.0.pdf" target="_blank">Terms and Conditions</a> *</label>
     </div>
     <div class="check-field">
       <input type="checkbox" id="privacy" />
@@ -709,6 +713,7 @@
     }
     if (from === 2) {
       const phone = document.getElementById('phone').value.trim();
+      const fsp_client_agreement = document.getElementById('fsp_client_agreement').checked;
       const terms = document.getElementById('terms').checked;
       const client_agreement = document.getElementById('client_agreement').checked;
       const privacy = document.getElementById('privacy').checked;
@@ -719,7 +724,7 @@
       if (!phone) { setStatus(2, 'error', 'Please enter your phone number.'); return; }
       if ((professionalStatus === 'Employee' || professionalStatus === 'Entrepreneur') && !occupation) { setStatus(2, 'error', 'Please enter your occupation.'); return; }
       if (workedFinancial === 'Yes' && !howlong) { setStatus(2, 'error', 'Please tell us how long you worked in a financial institution.'); return; }
-      if (!terms || !client_agreement || !privacy) { setStatus(2, 'error', 'Please agree to all legal documents.'); return; }
+      if (!fsp_client_agreement || !terms || !client_agreement || !privacy) { setStatus(2, 'error', 'Please agree to all legal documents.'); return; }
     }
 
     goScreen('screen-step' + to);
