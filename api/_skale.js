@@ -72,27 +72,31 @@ function skalePost(urlPath, data, options = {}) {
   return attempt(retries);
 }
 
-// Every request used to pay for a fresh authorisation round trip before it
-// could even start its real call, and that round trip is the slow one. Caching
-// the token across warm invocations takes it off the hot path entirely, which
-// is what keeps the total inside the platform's execution limit.
-let cachedToken = null;
-let cachedTokenExpiry = 0;
-const MAX_TOKEN_TTL_MS = 5 * 60 * 1000;
-
+// Every call authorises for itself. This used to cache the token across warm
+// invocations to keep the auth round trip off the hot path, but Skale expects
+// a token generated per request: a reused token is rejected, and because the
+// cache lived on the module it kept being reused for as long as the instance
+// stayed warm. That turned one stale token into every subsequent call on that
+// instance failing with an OAuth-shaped {error, error_description} reply --
+// which the sign-in page then reported as a bad password.
+//
+// The cost is one extra round trip per call. That is what maxDuration in
+// vercel.json has to cover, and correctness is worth more than the saving.
 async function getToken() {
   if (!CLIENT_SECRET) throw new Error('SKALE_CLIENT_SECRET is not configured');
-  if (cachedToken && Date.now() < cachedTokenExpiry) return cachedToken;
   const auth = await skalePost('/api/authorisation', {
     grant_type: 'client_credentials',
     client_id: CLIENT_ID,
     client_secret: CLIENT_SECRET
   }, { timeoutMs: AUTH_TIMEOUT_MS });
-  if (!auth.access_token) throw new Error('Auth failed');
-  const expiresInMs = Number(auth.expires_in) > 0 ? Number(auth.expires_in) * 1000 : MAX_TOKEN_TTL_MS;
-  cachedToken = auth.access_token;
-  cachedTokenExpiry = Date.now() + Math.min(expiresInMs, MAX_TOKEN_TTL_MS);
-  return cachedToken;
+  if (!auth || !auth.access_token) {
+    // Carry Skale's own wording out to the caller instead of a bare 'Auth
+    // failed', so a rejected client credential is not mistaken for a rejected
+    // user credential further up.
+    const detail = auth && (auth.error_description || auth.error);
+    throw new Error(detail ? `Authorisation failed: ${detail}` : 'Authorisation failed');
+  }
+  return auth.access_token;
 }
 
 function readBody(req) {

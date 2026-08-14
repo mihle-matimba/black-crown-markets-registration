@@ -21,16 +21,19 @@ module.exports = async (req, res) => {
     }
 
     // The browser can only report what it receives, and a rejected credential
-    // and an unexpected response shape look identical from there. Record the
-    // shape -- field names and status values only, never the token itself --
-    // so the platform log can settle which one it was.
-    console.log('Skale Login response shape:', JSON.stringify({
-      keys: Object.keys(login || {}),
-      status: login && login.status,
-      status_code: login && login.status_code,
-      message: login && login.message,
-      token_present: !!tokenValue
-    }));
+    // and a rejected request look identical from there. Record the reply --
+    // field names plus whatever Skale said went wrong, never the token itself
+    // -- so the platform log can settle which one it was.
+    if (!tokenValue) {
+      console.log('Skale Login rejected:', JSON.stringify({
+        keys: Object.keys(login || {}),
+        status: login && login.status,
+        status_code: login && login.status_code,
+        message: login && login.message,
+        error: login && login.error,
+        error_description: login && login.error_description
+      }));
+    }
 
     sendJson(res, 200, login);
   } catch (err) {

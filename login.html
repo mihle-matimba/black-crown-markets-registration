@@ -462,7 +462,11 @@
         // Only a real Skale rejection means bad credentials. Anything else --
         // a proxy error, a missing secret, an upstream timeout -- has to show
         // its own cause, or a broken backend is indistinguishable from a typo.
-        if (data.error) throw new Error(data.error);
+        // Skale rejects a bad request with an OAuth-shaped {error,
+        // error_description}; error_description is the readable half.
+        if (data.error || data.error_description) {
+          throw new Error(data.error_description || data.error);
+        }
         // Skale is not consistent about which field carries success: the
         // registration pages read status_code, this one read status, against
         // the same /api/v-2 endpoint. api/login.js already normalises the
@@ -489,7 +493,9 @@
       try {
         const res = await fetch(`${PROXY}/forgot-password`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
         const data = await readJson(res, 'Password reset');
-        if (data.error) throw new Error(data.error);
+        if (data.error || data.error_description) {
+          throw new Error(data.error_description || data.error);
+        }
         if (data.status !== 'Success') throw new Error(data.message || 'Email not found.');
         setStatus('forgot-status', 'success', '&#10003; Check your email for a link to reset your password.');
         btn.disabled = false;
