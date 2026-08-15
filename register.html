@@ -810,6 +810,9 @@
       terms: document.getElementById('terms').checked,
       privacy: document.getElementById('privacy').checked,
       clientagreement: document.getElementById('client_agreement').checked,
+      // Ticked on the form but previously never sent, so it reached neither
+      // Skale nor the consent record.
+      fsp_client_agreement: document.getElementById('fsp_client_agreement').checked,
       workatfinancial: document.getElementById('worked_financial_institution').value === 'Yes',
       howlong: document.getElementById('howlong').value.trim(),
       professional_status: document.getElementById('professional_status').value,

@@ -1,4 +1,45 @@
 const { skalePost, getToken, readBody, clientIp, requirePost, sendJson, DEFAULT_PLATFORM } = require('./_skale');
+const { insertRow, isConfigured } = require('./_supabase');
+const { acceptedDocuments } = require('./_legal-docs');
+
+const CONSENT_TABLE = 'legal_consents';
+
+// Records what the client accepted, alongside who accepted it and from where.
+// Deliberately never throws: the trading account already exists by the time
+// this runs, and a logging outage must not turn a completed registration into
+// a failure the client sees. A failure is logged for the platform instead.
+async function recordLegalConsent(req, body, result) {
+  if (!isConfigured()) {
+    console.log('Legal consent not recorded: Supabase is not configured');
+    return;
+  }
+
+  const documents = acceptedDocuments(body);
+  if (!documents.length) return;
+
+  const object = (result && result.object) || {};
+
+  try {
+    await insertRow(CONSENT_TABLE, {
+      full_name: `${body.first_name || ''} ${body.last_name || ''}`.trim(),
+      email: body.email,
+      identification_number: body.identification_number || null,
+      ip_address: clientIp(req),
+      country: body.country || null,
+      crm_account_id: object.crm_account_id ? String(object.crm_account_id) : null,
+      user_agent: req.headers['user-agent'] || null,
+      documents
+    });
+  } catch (err) {
+    // Name the client so the acceptance can be reconstructed from the log if
+    // the row itself never landed.
+    console.log('Legal consent insert failed:', JSON.stringify({
+      email: body.email,
+      documents: documents.map((d) => `${d.title} ${d.version}`),
+      reason: err.message
+    }));
+  }
+}
 
 module.exports = async (req, res) => {
   if (requirePost(req, res)) return;
@@ -40,6 +81,12 @@ module.exports = async (req, res) => {
       privacy: body.privacy ? '1' : '0',
       clientagreement: body.clientagreement ? '1' : '0',
     });
+
+    // Only a created account gets a consent row, so the table never fills with
+    // acceptances that have no client behind them.
+    const created = result && (result.status_code === '1' || result.status_code === 1);
+    if (created) await recordLegalConsent(req, body, result);
+
     sendJson(res, 200, result);
   } catch (err) {
     sendJson(res, 500, { error: err.message });
