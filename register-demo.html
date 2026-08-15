@@ -78,6 +78,7 @@
     }
 
     .field { margin-bottom: 16px; }
+    .optional { color: #888; font-weight: 400; }
     .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
     label {
@@ -363,7 +364,7 @@
       <input type="text" id="address" placeholder="Street address" />
     </div>
     <div class="field">
-      <label>Address Line 2</label>
+      <label>Address Line 2 <span class="optional">(optional)</span></label>
       <input type="text" id="address_2" placeholder="Apartment, suite, unit" />
     </div>
     <div class="row">
@@ -484,7 +485,7 @@
       setStatus('error', 'Please fill in all fields.'); return;
     }
 
-    if (!body.address || !body.address_2 || !body.city || !body.postal_code) {
+    if (!body.address || !body.city || !body.postal_code) {
       setStatus('error', 'Please complete your address.'); return;
     }
 
