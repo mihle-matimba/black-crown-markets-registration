@@ -14,6 +14,12 @@ module.exports = async (req, res) => {
       email: body.email,
       phone: body.phone,
       country: body.country,
+      // Skale's own names for these are unconfirmed -- if the address does not
+      // appear on the client record, these keys are the first thing to check.
+      address: body.address,
+      address_2: body.address_2,
+      city: body.city,
+      postcode: body.postal_code,
       password: body.password,
       currency: body.currency || 'USD',
       platform_name: DEFAULT_PLATFORM,

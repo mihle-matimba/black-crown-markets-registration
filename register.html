@@ -343,6 +343,25 @@
       </select>
     </div>
     <div class="field">
+      <label>Address</label>
+      <input type="text" id="address" placeholder="Street address" />
+    </div>
+    <div class="field">
+      <label>Address Line 2</label>
+      <input type="text" id="address_2" placeholder="Apartment, suite, unit" />
+    </div>
+    <div class="row">
+      <div class="field">
+        <label>City</label>
+        <input type="text" id="city" placeholder="Cape Town" />
+      </div>
+      <div class="field">
+        <label>Postal Code</label>
+        <input type="text" id="postal_code" placeholder="8001" />
+      </div>
+    </div>
+
+    <div class="field">
       <label>Phone Number</label>
       <div class="row-3">
         <select id="country_code">
@@ -727,6 +746,10 @@
     }
     if (from === 2) {
       const phone = document.getElementById('phone').value.trim();
+      const address = document.getElementById('address').value.trim();
+      const address_2 = document.getElementById('address_2').value.trim();
+      const city = document.getElementById('city').value.trim();
+      const postal_code = document.getElementById('postal_code').value.trim();
       const fsp_client_agreement = document.getElementById('fsp_client_agreement').checked;
       const terms = document.getElementById('terms').checked;
       const client_agreement = document.getElementById('client_agreement').checked;
@@ -736,6 +759,7 @@
       const workedFinancial = document.getElementById('worked_financial_institution').value;
       const howlong = document.getElementById('howlong').value.trim();
       if (!phone) { setStatus(2, 'error', 'Please enter your phone number.'); return; }
+      if (!address || !address_2 || !city || !postal_code) { setStatus(2, 'error', 'Please complete your address.'); return; }
       if ((professionalStatus === 'Employee' || professionalStatus === 'Entrepreneur') && !occupation) { setStatus(2, 'error', 'Please enter your occupation.'); return; }
       if (workedFinancial === 'Yes' && !howlong) { setStatus(2, 'error', 'Please tell us how long you worked in a financial institution.'); return; }
       if (!fsp_client_agreement || !terms || !client_agreement || !privacy) { setStatus(2, 'error', 'Please agree to all legal documents.'); return; }
@@ -774,6 +798,10 @@
       email: document.getElementById('email').value.trim(),
       phone: countryCode + phone,
       country: document.getElementById('country').value,
+      address: document.getElementById('address').value.trim(),
+      address_2: document.getElementById('address_2').value.trim(),
+      city: document.getElementById('city').value.trim(),
+      postal_code: document.getElementById('postal_code').value.trim(),
       currency: selectedCurrency,
       password: document.getElementById('password').value.trim(),
       account_type: selectedAccountType.account_type,

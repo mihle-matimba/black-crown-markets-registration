@@ -359,6 +359,25 @@
     </div>
 
     <div class="field">
+      <label>Address</label>
+      <input type="text" id="address" placeholder="Street address" />
+    </div>
+    <div class="field">
+      <label>Address Line 2</label>
+      <input type="text" id="address_2" placeholder="Apartment, suite, unit" />
+    </div>
+    <div class="row">
+      <div class="field">
+        <label>City</label>
+        <input type="text" id="city" placeholder="Cape Town" />
+      </div>
+      <div class="field">
+        <label>Postal Code</label>
+        <input type="text" id="postal_code" placeholder="8001" />
+      </div>
+    </div>
+
+    <div class="field">
       <label>Password</label>
       <div class="pw-wrap">
         <input type="password" id="password" placeholder="Min 8 chars, upper, lower, number & symbol" oninput="updatePasswordHint(this.value)" />
@@ -452,6 +471,10 @@
       email: document.getElementById('email').value.trim(),
       phone: document.getElementById('phone').value.trim(),
       country: document.getElementById('country').value,
+      address: document.getElementById('address').value.trim(),
+      address_2: document.getElementById('address_2').value.trim(),
+      city: document.getElementById('city').value.trim(),
+      postal_code: document.getElementById('postal_code').value.trim(),
       currency: document.getElementById('currency').value,
       password: document.getElementById('password').value.trim(),
       ibid: affiliateId,
@@ -459,6 +482,10 @@
 
     if (!body.first_name || !body.last_name || !body.email || !body.phone || !body.password) {
       setStatus('error', 'Please fill in all fields.'); return;
+    }
+
+    if (!body.address || !body.address_2 || !body.city || !body.postal_code) {
+      setStatus('error', 'Please complete your address.'); return;
     }
 
     if (body.password.length < 8) {
