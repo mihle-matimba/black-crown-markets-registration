@@ -642,7 +642,7 @@
   function renderLeverageOptions(maxLeverage) {
     const select = document.getElementById('leverage');
     const options = LEVERAGE_LADDER.filter(l => l <= maxLeverage);
-    const defaultValue = options.includes(100) ? 100 : options[0];
+    const defaultValue = Math.max(...options);
     select.innerHTML = options.map(l => `<option value="${l}"${l === defaultValue ? ' selected' : ''}>1:${l}</option>`).join('');
   }
 
